@@ -37,6 +37,11 @@ class ControllerPaymentBegateway extends Controller {
     $orderAmount = (float)$orderAmount * pow(10,(int)$this->currency->getDecimalPlace($order_info['currency_code']));
     $orderAmount = intval(strval($orderAmount));
 
+    # simplecheckout hack to fix issue with not valid emails
+    # when customer didn't enter it
+    $email = $order_info['email'];
+    $email = $email == 'empty@localhost' ? null : $email;
+
     $customer_array =  array (
       'address' => $order_info['payment_address_1'],
       'first_name' => $order_info['payment_firstname'],
@@ -44,7 +49,7 @@ class ControllerPaymentBegateway extends Controller {
       'country' => $order_info['payment_iso_code_2'],
       'city'=> $order_info['payment_city'],
       'phone' =>$order_info['telephone'],
-      'email'=> $order_info['email'],
+      'email'=> $email,
       'zip' => $order_info['payment_postcode']
     );
 
